@@ -104,7 +104,7 @@ public class HashMap<T> {
         }
 
         @Override public String toString() {
-            return this.head == null ? "null" : this.head.toString();
+            return this.head == null ? "x" : this.head.toString();
         }
 
         private class B<T> {
