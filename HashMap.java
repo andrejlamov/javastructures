@@ -20,10 +20,10 @@ public class HashMap<T> {
         int idx = k.hashCode() % capacity;
         if(array[idx] == null) {
             array[idx] = new Bucket<T>(k, v);
-            nrOfElements++;
         } else {
             ((Bucket<T>) array[idx]).add(k, v);
         }
+        nrOfElements++;
     }
 
     public T get(String k) {
@@ -39,9 +39,17 @@ public class HashMap<T> {
         int idx = k.hashCode() % capacity;
         Bucket<T> bucket = (Bucket<T>) array[idx];
         if(bucket != null) {
-            return bucket.remove(k);
+            T v = bucket.remove(k);
+            if (v != null) {
+                nrOfElements--;
+                return v;
+            }
         }
         return null;
+    }
+
+    public int getNrOfElements() {
+        return this.nrOfElements;
     }
 
     @Override public String toString() {
