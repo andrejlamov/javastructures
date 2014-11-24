@@ -16,7 +16,16 @@ public class HashMap<T> {
         array = new Object[initialCapacity];
     }
 
+
     public void add(String k, T v) {
+        double load =  nrOfElements / ((double) capacity);
+        if (load > limit) {
+            grow();
+        }
+        add(k, v, this.array, this.capacity);
+    }
+
+    private void add(String k, T v, Object[] array, int capacity) {
         int idx = k.hashCode() % capacity;
         if(array[idx] == null) {
             array[idx] = new Bucket<T>(k, v);
@@ -24,6 +33,23 @@ public class HashMap<T> {
             ((Bucket<T>) array[idx]).add(k, v);
         }
         nrOfElements++;
+    }
+
+    private void grow() {
+        int newCapacity = 2*capacity;
+        Object[] newArray = new Object[newCapacity];
+        for(Object o : array) {
+            if(o != null) {
+                Bucket<T> current = (Bucket<T>) o;
+                Bucket<T>.B<T> head = current.head;
+                while(head != null) {
+                    add(head.k, head.v, newArray, newCapacity);
+                    head = head.next;
+                }
+            }
+        }
+        this.capacity = newCapacity;
+        this.array = newArray;
     }
 
     public T get(String k) {
